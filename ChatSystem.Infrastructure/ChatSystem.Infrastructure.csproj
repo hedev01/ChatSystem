@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChatSystem.Domain\ChatSystem.Domain.csproj" />
+    <ProjectReference Include="..\ChatSystem.Application\ChatSystem.Application.csproj" />
   </ItemGroup>
 
 </Project>

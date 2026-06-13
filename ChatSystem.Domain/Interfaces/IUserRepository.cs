@@ -7,9 +7,8 @@ using ChatSystem.Domain.Entities;
 
 namespace ChatSystem.Domain.Interfaces
 {
-    public interface IMessageRepository
+    public interface IUserRepository
     {
-        Task AddAsync(Message message);
-        Task<List<Message>> GetConversationAsync(Guid user1, Guid user2);
+        Task Register(User entity);
     }
 }

@@ -21,13 +21,13 @@ namespace ChatSystem.Infrastructure.Repositories
 
         public async Task AddAsync(Message message)
         {
-            await _context.Message.AddAsync(message);
+            await _context.Messages.AddAsync(message);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Message>> GetConversationAsync(string user1, string user2)
+        public async Task<List<Message>> GetConversationAsync(Guid user1, Guid user2)
         {
-            return await _context.Message
+            return await _context.Messages
                 .Where(m =>
                     (m.SenderId == user1 && m.ReceiverId == user2) ||
                     (m.SenderId == user2 && m.ReceiverId == user1))
