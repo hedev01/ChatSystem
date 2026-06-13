@@ -61,7 +61,8 @@ ChatSystem
 │
 ├── Presentation Layer (API)
 │   ├── Controllers
-│   ├── Middleware
+│   ├── DI
+│   ├── Hubs
 │
 ├── Application Layer
 │   ├── UseCases
