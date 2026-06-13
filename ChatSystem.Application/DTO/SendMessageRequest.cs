@@ -8,8 +8,8 @@ namespace ChatSystem.Application.DTO
 {
     public class SendMessageRequest
     {
-        public string SenderId { get; set; }
-        public string ReceiverId { get; set; }
+        public Guid SenderId { get; set; }
+        public Guid ReceiverId { get; set; }
         public string Content { get; set; }
     }
 }

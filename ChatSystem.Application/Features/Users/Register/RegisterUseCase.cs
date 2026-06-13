@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ChatSystem.Application.Common;
+using ChatSystem.Application.Common.Security;
+using ChatSystem.Application.Interfaces;
+using ChatSystem.Domain.Entities;
+using ChatSystem.Domain.Interfaces;
+using IJwtTokenService = ChatSystem.Application.Interfaces.IJwtTokenService;
+
+namespace ChatSystem.Application.Features.Users.Register
+{
+    internal sealed class RegisterUseCase : IRegisterUseCase
+    {
+        private readonly IUserRepository _userRepository;
+        private readonly IJwtTokenService _jwtTokenService;
+        private readonly IPasswordHasher _passwordHasher;
+
+        public RegisterUseCase(IUserRepository userRepository, IJwtTokenService jwtTokenService , IPasswordHasher passwordHasher)
+        {
+            _userRepository = userRepository;
+            _jwtTokenService = jwtTokenService;
+            _passwordHasher = passwordHasher;
+        }
+        public async Task<Result<RegisterResponse>> Register(RegisterRequest request)
+        {
+            var hashPassword = _passwordHasher.Hash(request.password);
+
+            var user = User.Register(request.userName,
+                request.email,
+                hashPassword,
+                request.firstName,
+                request.lastName);
+
+            await _userRepository.Register(user);
+
+            var accessToken =
+                _jwtTokenService.GenerateToken(user.Username, user.UserId);
+
+            return Result<RegisterResponse>.Success(
+                new RegisterResponse(
+                    user.UserId,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    accessToken));
+        }
+    }
+}
