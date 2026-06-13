@@ -22,7 +22,7 @@ namespace ChatSystem.Api.Hubs
                 Content = request.Content
             });
 
-            await Clients.Users(request.ReceiverId).SendAsync("ReceiveMessage" , request.SenderId, request.Content);
+            await Clients.Users(request.ReceiverId.ToString()).SendAsync("ReceiveMessage", request.SenderId, request.Content);
         }
         public override async Task OnConnectedAsync()
         {

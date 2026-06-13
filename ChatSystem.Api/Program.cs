@@ -1,11 +1,17 @@
+using System.Text;
 using ChatSystem.Api.Hubs;
+using ChatSystem.Api.SignalR;
 using ChatSystem.Application.Interfaces;
 using ChatSystem.Application.UseCase;
 using ChatSystem.Domain.Interfaces;
 using ChatSystem.Infrastructure.Data;
 using ChatSystem.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.IdentityModel.Tokens;
+using FluentValidation;
+using ChatSystem.Api.DI;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,8 +27,58 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
             "Server=.;Database=Chat;User Id=UserForChatDB;Password=123456;TrustServerCertificate=True;");
 });
 
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddScoped<IChatService, ChatService>();
+Dependencies.Inject(builder.Services);
+
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+            ClockSkew = TimeSpan.Zero
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+
+                return context.Response.WriteAsync("""
+                                                   {
+                                                       "message": "ابتدا وارد حساب کاربری شوید."
+                                                   }
+                                                   """);
+            },
+
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+
+                return context.Response.WriteAsync("""
+                                                   {
+                                                       "message": "شما مجاز به انجام این عملیات نیستید."
+                                                   }
+                                                   """);
+            }
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -35,7 +91,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
-
+//app.UseExceptionHandler();
 app.UseAuthorization();
 
 app.MapControllers();
