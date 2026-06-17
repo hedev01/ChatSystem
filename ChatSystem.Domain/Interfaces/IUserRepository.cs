@@ -10,5 +10,6 @@ namespace ChatSystem.Domain.Interfaces
     public interface IUserRepository
     {
         Task Register(User entity);
+        Task<User?> Login(string email);
     }
 }

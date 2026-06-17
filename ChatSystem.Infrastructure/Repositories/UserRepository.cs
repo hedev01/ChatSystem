@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChatSystem.Domain.Entities;
 using ChatSystem.Domain.Interfaces;
 using ChatSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatSystem.Infrastructure.Repositories
 {
@@ -21,6 +22,12 @@ namespace ChatSystem.Infrastructure.Repositories
         {
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> Login(string email)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+            return result;
         }
     }
 }
