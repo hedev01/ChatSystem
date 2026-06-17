@@ -1,6 +1,7 @@
 ﻿using ChatSystem.Api.SignalR;
 using ChatSystem.Application;
 using ChatSystem.Application.Common.Security;
+using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
 using ChatSystem.Application.Interfaces;
 using ChatSystem.Application.UseCase;
@@ -11,6 +12,7 @@ using ChatSystem.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.SignalR;
+using LoginRequest = ChatSystem.Application.Features.Users.Login.LoginRequest;
 using RegisterRequest = ChatSystem.Application.Features.Users.Register.RegisterRequest;
 
 namespace ChatSystem.Api.DI
@@ -23,10 +25,11 @@ namespace ChatSystem.Api.DI
                 .AddScoped<IMessageRepository, MessageRepository>()
                 .AddScoped<IChatService, ChatService>()
                 .AddScoped<IJwtTokenService, JwtTokenService>()
-                .AddScoped<IUserRepository , UserRepository>()
-                .AddScoped<IPasswordHasher , PasswordHasher>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IPasswordHasher, PasswordHasher>()
                 .AddApplication()
-                .AddScoped<IValidator<RegisterRequest>, RegisterValidator>();
+                .AddScoped<IValidator<RegisterRequest>, RegisterValidator>()
+                .AddScoped<IValidator<LoginRequest>, LoginValidator>();
 
         }
     }
