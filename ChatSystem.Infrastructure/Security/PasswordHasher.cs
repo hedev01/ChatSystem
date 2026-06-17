@@ -15,5 +15,11 @@ namespace ChatSystem.Infrastructure.Security
             string hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
             return hashPassword;
         }
+
+        public bool Verify(string password, string passwordHash)
+        {
+            bool result = BCrypt.Net.BCrypt.Verify(password, passwordHash);
+            return result;
+        }
     }
 }
