@@ -1,4 +1,6 @@
-﻿using ChatSystem.Application.Features.Users.Register;
+﻿using ChatSystem.Application.Common;
+using ChatSystem.Application.Features.Users.Login;
+using ChatSystem.Application.Features.Users.Register;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,12 @@ namespace ChatSystem.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IRegisterUseCase _registerUseCase;
+        private readonly ILoginUseCase _loginUseCase;
 
-        public UserController(IRegisterUseCase registerUseCase)
+        public UserController(IRegisterUseCase registerUseCase, ILoginUseCase loginUseCase)
         {
             _registerUseCase = registerUseCase;
+            _loginUseCase = loginUseCase;
         }
 
         [HttpPost("Register")]
@@ -21,10 +25,34 @@ namespace ChatSystem.Api.Controllers
             var validator = new RegisterValidator();
 
             var validatorResult = await validator.ValidateAsync(request);
-            if (!validatorResult.IsValid) return BadRequest(validatorResult.Errors);
+            if (!validatorResult.IsValid)
+            {
+                var errors = string.Join(" | ", validatorResult.Errors.Select(e => e.ErrorMessage));
+                return Ok(
+                    Result<RegisterResponse>
+                        .Failure(errors));
+            }
 
             var result = await _registerUseCase.Register(request);
             return Ok(result);
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var validtor = new LoginValidator();
+            var validatorResult = await validtor.ValidateAsync(request);
+            if (!validatorResult.IsValid)
+            {
+                var errors = string.Join(" | ", validatorResult.Errors.Select(e => e.ErrorMessage));
+                return Ok(
+                    Result<LoginResponse>
+                        .Failure(errors));
+            }
+
+            var result = await _loginUseCase.Login(request);
+            return Ok(result);
+
         }
 
     }
