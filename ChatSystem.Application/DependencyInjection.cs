@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChatSystem.Application.Features.Users.GetUsers;
 using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,8 @@ namespace ChatSystem.Application
         public static IServiceCollection AddApplication(this IServiceCollection service)
         {
             service.AddScoped<IRegisterUseCase, RegisterUseCase>()
-                .AddScoped<ILoginUseCase , LoginUseCase>();
+                .AddScoped<ILoginUseCase, LoginUseCase>()
+                .AddScoped<IGetUsersUseCase, GetUsersUseCase>();
             return service;
         }
     }

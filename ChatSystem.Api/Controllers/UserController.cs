@@ -1,4 +1,5 @@
 ﻿using ChatSystem.Application.Common;
+using ChatSystem.Application.Features.Users.GetUsers;
 using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +13,13 @@ namespace ChatSystem.Api.Controllers
     {
         private readonly IRegisterUseCase _registerUseCase;
         private readonly ILoginUseCase _loginUseCase;
+        private readonly IGetUsersUseCase _getUsersUseCase;
 
-        public UserController(IRegisterUseCase registerUseCase, ILoginUseCase loginUseCase)
+        public UserController(IRegisterUseCase registerUseCase, ILoginUseCase loginUseCase, IGetUsersUseCase getUsersUseCase)
         {
             _registerUseCase = registerUseCase;
             _loginUseCase = loginUseCase;
+            _getUsersUseCase = getUsersUseCase;
         }
 
         [HttpPost("Register")]
@@ -53,6 +56,17 @@ namespace ChatSystem.Api.Controllers
             var result = await _loginUseCase.Login(request);
             return Ok(result);
 
+        }
+
+        [HttpGet("GetUsers")]
+        public async Task<IActionResult> GetUserAsync(Guid userId)
+        {
+            var result = await _getUsersUseCase.GetUsersAsync(userId);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            return Ok(result);
         }
 
     }

@@ -26,6 +26,8 @@ namespace ChatSystem.Application.Features.Users.Register
         }
         public async Task<Result<RegisterResponse>> Register(RegisterRequest request)
         {
+           bool emailExists = await _userRepository.EmailExists(request.email);
+           if(emailExists) return Result<RegisterResponse>.Failure("Email Has Exists");
             var hashPassword = _passwordHasher.Hash(request.password);
 
             var user = User.Register(request.userName,

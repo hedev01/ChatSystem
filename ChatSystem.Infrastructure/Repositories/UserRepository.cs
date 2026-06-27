@@ -29,5 +29,17 @@ namespace ChatSystem.Infrastructure.Repositories
             var result = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
             return result;
         }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            var result = await _context.Users.AnyAsync(user => user.Email == email);
+            return result;
+        }
+
+        public async Task<List<User?>> GetUsers(Guid userId)
+        {
+            var result = await _context.Users.Where(user => user.UserId != userId).ToListAsync();
+            return result!;
+        }
     }
 }
