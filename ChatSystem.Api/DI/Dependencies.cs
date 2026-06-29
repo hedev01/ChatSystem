@@ -4,6 +4,7 @@ using ChatSystem.Application.Common.Security;
 using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
 using ChatSystem.Application.Interfaces;
+using ChatSystem.Application.Service;
 using ChatSystem.Application.UseCase;
 using ChatSystem.Domain.Interfaces;
 using ChatSystem.Infrastructure.Repositories;
@@ -24,8 +25,10 @@ namespace ChatSystem.Api.DI
             service.AddSingleton<IUserIdProvider, CustomUserIdProvider>()
                 .AddScoped<IMessageRepository, MessageRepository>()
                 .AddScoped<IChatService, ChatService>()
+                .AddScoped<IPresenceService , PresenceService>()
                 .AddScoped<IJwtTokenService, JwtTokenService>()
                 .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IUserConnectionRepository , InMemoryConnectionRepository>()
                 .AddScoped<IPasswordHasher, PasswordHasher>()
                 .AddApplication()
                 .AddScoped<IValidator<RegisterRequest>, RegisterValidator>()
