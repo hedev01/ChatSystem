@@ -28,7 +28,7 @@ namespace ChatSystem.Api.DI
                 .AddScoped<IPresenceService , PresenceService>()
                 .AddScoped<IJwtTokenService, JwtTokenService>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IUserConnectionRepository , InMemoryConnectionRepository>()
+                .AddSingleton<IUserConnectionRepository , InMemoryConnectionRepository>()
                 .AddScoped<IPasswordHasher, PasswordHasher>()
                 .AddApplication()
                 .AddScoped<IValidator<RegisterRequest>, RegisterValidator>()
