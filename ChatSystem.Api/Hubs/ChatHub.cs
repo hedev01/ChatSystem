@@ -1,6 +1,5 @@
 ﻿using ChatSystem.Application.DTO;
 using ChatSystem.Application.Interfaces;
-using ChatSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ChatSystem.Api.Hubs
@@ -11,12 +10,17 @@ namespace ChatSystem.Api.Hubs
         private readonly IPresenceService _presenceService;
         private readonly ILogger<ChatHub> _logger;
 
-        public ChatHub(IChatService chatService , IPresenceService presenceService , ILogger<ChatHub> logger)
+        public ChatHub(
+            IChatService chatService,
+            IPresenceService presenceService,
+            ILogger<ChatHub> logger)
         {
             _chatService = chatService;
             _presenceService = presenceService;
             _logger = logger;
         }
+
+    
         public async Task SendMessage(SendMessageRequest request)
         {
             await _chatService.SendMessage(new MessageDto
@@ -26,50 +30,92 @@ namespace ChatSystem.Api.Hubs
                 Content = request.Content
             });
 
-            await Clients.Users(request.ReceiverId.ToString()).SendAsync("ReceiveMessage", request.SenderId, request.Content);
+            await Clients.Users(request.ReceiverId.ToString())
+                .SendAsync("ReceiveMessage", request.SenderId, request.Content);
         }
+
+    
         public override async Task OnConnectedAsync()
         {
+            var connectionId = Context.ConnectionId;
+
+            _logger.LogInformation("🟢 CONNECTED | ConnectionId: {ConnectionId}", connectionId);
+
             var userId = Context.GetHttpContext()?.Request.Query["userId"].ToString();
 
             if (string.IsNullOrEmpty(userId))
             {
-                _logger.LogError("userId is null in OnConnectedAsync");
+                _logger.LogWarning("❌ userId is NULL | ConnectionId: {ConnectionId}", connectionId);
                 return;
             }
 
+         
             Context.Items["userId"] = userId;
 
-            await _presenceService.UserConnected(userId, Context.ConnectionId);
+            _logger.LogInformation("👤 User Connected | UserId: {UserId}", userId);
 
-            await Clients.Others.SendAsync("UserOnline", userId);
+        
+            var isFirstConnection = await _presenceService.UserConnected(userId, connectionId);
+
+            _logger.LogInformation("📌 Presence updated | IsFirstConnection: {IsFirst}", isFirstConnection);
+
+       
+            var onlineUsers = await _presenceService.GetOnlineUsers();
+
+            _logger.LogInformation("📡 Online Users Snapshot Count: {Count}", onlineUsers.Count);
+
+            foreach (var u in onlineUsers)
+            {
+                _logger.LogInformation("   🟢 ONLINE: {UserId}", u);
+            }
+
+            await Clients.Caller.SendAsync("OnlineUsers", onlineUsers);
+
+            _logger.LogInformation("📤 Snapshot sent to caller");
+
+            
+            if (isFirstConnection)
+            {
+                await Clients.Others.SendAsync("UserOnline", userId);
+                _logger.LogInformation("📣 Broadcast UserOnline: {UserId}", userId);
+            }
 
             await base.OnConnectedAsync();
         }
+
+  
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            _logger.LogInformation("OnDisconnected");
+            var connectionId = Context.ConnectionId;
+
+            _logger.LogInformation("🔴 DISCONNECTED | ConnectionId: {ConnectionId}", connectionId);
 
             var userId = Context.Items["userId"]?.ToString();
 
             if (string.IsNullOrEmpty(userId))
             {
-                _logger.LogError("userId is NULL in OnDisconnectedAsync");
+                _logger.LogWarning("❌ userId NOT FOUND in Context.Items | ConnectionId: {ConnectionId}", connectionId);
+                await base.OnDisconnectedAsync(exception);
                 return;
             }
 
-            _logger.LogInformation("UserId: {userId}", userId);
+            _logger.LogInformation("👤 User Disconnecting | UserId: {UserId}", userId);
 
-            var offline = await _presenceService.UserDisconnected(userId, Context.ConnectionId);
+     
+            var isLastConnection = await _presenceService.UserDisconnected(userId, connectionId);
 
-            _logger.LogInformation("offline = {offline}", offline);
+            _logger.LogInformation("📌 Presence removed | IsLastConnection: {IsLast}", isLastConnection);
 
-            //if (offline)
-            //{
+       
+            if (isLastConnection)
+            {
                 await Clients.Others.SendAsync("UserOffline", userId);
-            //}
+                _logger.LogInformation("📣 Broadcast UserOffline: {UserId}", userId);
+            }
 
             await base.OnDisconnectedAsync(exception);
+
+            _logger.LogInformation("✅ DISCONNECT COMPLETE | UserId: {UserId}", userId);
         }
     }
 }
