@@ -29,5 +29,10 @@ namespace ChatSystem.Application.UseCase
 
             await _repo.AddAsync(message);
         }
+
+        public async Task MarkConversationAsRead(Guid senderId, Guid receiverId)
+        {
+            await _repo.MarkConversationAsRead(senderId, receiverId);
+        }
     }
 }

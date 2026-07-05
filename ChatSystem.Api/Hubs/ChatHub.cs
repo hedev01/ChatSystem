@@ -20,7 +20,7 @@ namespace ChatSystem.Api.Hubs
             _logger = logger;
         }
 
-    
+
         public async Task SendMessage(SendMessageRequest request)
         {
             await _chatService.SendMessage(new MessageDto
@@ -31,10 +31,23 @@ namespace ChatSystem.Api.Hubs
             });
 
             await Clients.Users(request.ReceiverId.ToString())
-                .SendAsync("ReceiveMessage", request.SenderId, request.Content);
+                .SendAsync("ReceiveMessage", request.SenderId, request.ReceiverId, request.Content);
         }
 
-    
+        public async Task MarkConversationAsRead(Guid senderId)
+        {
+            var receiverIdString = Context.Items["userId"]?.ToString();
+
+            if (!Guid.TryParse(receiverIdString, out var receiverId))
+                return;
+
+            await _chatService.MarkConversationAsRead(senderId, receiverId);
+
+            await Clients.User(senderId.ToString())
+                .SendAsync("ConversationRead", receiverId);
+        }
+
+
         public override async Task OnConnectedAsync()
         {
             var connectionId = Context.ConnectionId;
@@ -49,17 +62,17 @@ namespace ChatSystem.Api.Hubs
                 return;
             }
 
-         
+
             Context.Items["userId"] = userId;
 
             _logger.LogInformation("👤 User Connected | UserId: {UserId}", userId);
 
-        
+
             var isFirstConnection = await _presenceService.UserConnected(userId, connectionId);
 
             _logger.LogInformation("📌 Presence updated | IsFirstConnection: {IsFirst}", isFirstConnection);
 
-       
+
             var onlineUsers = await _presenceService.GetOnlineUsers();
 
             _logger.LogInformation("📡 Online Users Snapshot Count: {Count}", onlineUsers.Count);
@@ -73,7 +86,7 @@ namespace ChatSystem.Api.Hubs
 
             _logger.LogInformation("📤 Snapshot sent to caller");
 
-            
+
             if (isFirstConnection)
             {
                 await Clients.Others.SendAsync("UserOnline", userId);
@@ -83,7 +96,7 @@ namespace ChatSystem.Api.Hubs
             await base.OnConnectedAsync();
         }
 
-  
+
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var connectionId = Context.ConnectionId;
@@ -101,12 +114,12 @@ namespace ChatSystem.Api.Hubs
 
             _logger.LogInformation("👤 User Disconnecting | UserId: {UserId}", userId);
 
-     
+
             var isLastConnection = await _presenceService.UserDisconnected(userId, connectionId);
 
             _logger.LogInformation("📌 Presence removed | IsLastConnection: {IsLast}", isLastConnection);
 
-       
+
             if (isLastConnection)
             {
                 await Clients.Others.SendAsync("UserOffline", userId);

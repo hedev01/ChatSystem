@@ -34,5 +34,22 @@ namespace ChatSystem.Infrastructure.Repositories
                 .OrderBy(m => m.SentAt)
                 .ToListAsync();
         }
+
+        public async Task MarkConversationAsRead(Guid senderId, Guid receiverId)
+        {
+            var messages = await _context.Messages
+                .Where(x =>
+                    x.SenderId == senderId &&
+                    x.ReceiverId == receiverId &&
+                    !x.IsRead)
+                .ToListAsync();
+
+            foreach (var message in messages)
+            {
+                message.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

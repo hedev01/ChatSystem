@@ -11,5 +11,6 @@ namespace ChatSystem.Domain.Interfaces
     {
         Task AddAsync(Message message);
         Task<List<Message>> GetConversationAsync(Guid user1, Guid user2);
+        Task MarkConversationAsRead(Guid senderId, Guid receiverId);
     }
 }

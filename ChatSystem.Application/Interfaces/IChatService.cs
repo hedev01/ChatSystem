@@ -10,5 +10,6 @@ namespace ChatSystem.Application.Interfaces
     public interface IChatService
     {
         Task SendMessage(MessageDto dto);
+        Task MarkConversationAsRead(Guid senderId, Guid receiverId);
     }
 }
