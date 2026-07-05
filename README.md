@@ -1,68 +1,78 @@
-# 💬 Chat System API
+<div align="center">
 
-A modern and scalable Chat Backend API built with **ASP.NET Core** and **Clean Architecture** principles.
+<h1>💬 Chat System API</h1>
 
-This project demonstrates real-world backend development practices including Authentication, Authorization, Validation, Domain Separation, and extensible architecture for real-time messaging systems.
+<p>
+A scalable Chat Backend API built with <b>ASP.NET Core</b> and <b>Clean Architecture</b>.
+</p>
+
+<p>
+Real-world backend architecture with authentication, authorization, validation, and real-time messaging design.
+</p>
+
+<br/>
+
+<img src="https://img.shields.io/badge/ASP.NET%20Core-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"/>
+<img src="https://img.shields.io/badge/Clean%20Architecture-success?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge&logo=jsonwebtokens&logoColor=white"/>
+<img src="https://img.shields.io/badge/SignalR-Real%20Time-1E88E5?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Entity%20Framework-Core-6DB33F?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Status-Under%20Development-orange?style=for-the-badge"/>
+
+</div>
 
 ---
 
 ## ✨ Features
 
 ### 👤 User Management
-
-- User Registration
-- (Login / Logout coming soon)
-- JWT Authentication (planned expansion)
-- Secure user identity management
+- User Registration  
+- Secure Identity Management  
+- Authentication-ready architecture (Login/Logout expansion ready)  
 
 ---
 
 ### 🔐 Authentication & Security
-
-- JWT-based Authentication
-- Secure Token Handling
-- Protected API Endpoints
-- Extensible Authorization System
+- JWT-based Authentication  
+- Secure token handling  
+- Protected API endpoints  
+- Extensible authorization system  
 
 ---
 
-### 💬 Chat System (In Progress)
-
-- Private Messaging (planned)
-- Group Chat Support (planned)
-- Real-time Communication with SignalR (planned)
-- Message History Storage
-- Scalable Chat Architecture Design
+### 💬 Chat System (Architecture Design)
+- Private messaging structure (in progress)  
+- Group chat support (planned)  
+- Real-time communication using SignalR  
+- Message history persistence  
+- Scalable chat domain design  
 
 ---
 
 ### 🛡️ Validation & Error Handling
-
-- Request Validation using FluentValidation
-- Clean and consistent error responses
-- Separation of validation logic from business logic
+- FluentValidation integration  
+- Centralized error handling  
+- Clean separation of concerns  
 
 ---
 
 ### 🗄️ Data Layer
-
-- Entity Framework Core
-- Clean separation of persistence layer
-- Scalable database design
+- Entity Framework Core  
+- Repository pattern  
+- Clean separation of persistence and domain layers  
+- Scalable database architecture  
 
 ---
 
 ## 🏗️ Architecture
 
-This project follows the **Clean Architecture** pattern.
-
-```text
+<pre>
 ChatSystem
 │
 ├── Presentation Layer (API)
 │   ├── Controllers
-│   ├── DI
 │   ├── Hubs
+│   ├── DI
 │
 ├── Application Layer
 │   ├── UseCases
@@ -82,3 +92,12 @@ ChatSystem
 │
 └── Persistence
     └── SQL Server
+</pre>
+
+---
+
+<div align="center">
+
+<b>Built with ASP.NET Core • Clean Architecture • SignalR Ready</b>
+
+</div>
