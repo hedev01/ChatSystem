@@ -2,3 +2,4 @@
 [Bb]in/
 [Oo]bj/
 ChatSystem.Api/Logs/
+ChatSystem.EmailWorker/
