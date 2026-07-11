@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSystem.Api", "ChatSystem.Api.csproj", "{125AEF6E-7142-4458-ACB0-FDCBF1E841CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSystem.Api", "ChatSystem.Api.csproj", "{125AEF6E-7142-4458-ACB0-FDCBF1E841CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSystem.Domain", "..\ChatSystem.Domain\ChatSystem.Domain.csproj", "{EA06A43B-6DF2-4607-AD8F-5F87575E1514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSystem.Domain", "..\ChatSystem.Domain\ChatSystem.Domain.csproj", "{EA06A43B-6DF2-4607-AD8F-5F87575E1514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSystem.Application", "..\ChatSystem.Application\ChatSystem.Application.csproj", "{613E9AF9-CF74-4257-9C60-7F37962D55DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSystem.Application", "..\ChatSystem.Application\ChatSystem.Application.csproj", "{613E9AF9-CF74-4257-9C60-7F37962D55DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSystem.Infrastructure", "..\ChatSystem.Infrastructure\ChatSystem.Infrastructure.csproj", "{BF043ACB-15F2-47C1-922F-BF34216DA199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSystem.Infrastructure", "..\ChatSystem.Infrastructure\ChatSystem.Infrastructure.csproj", "{BF043ACB-15F2-47C1-922F-BF34216DA199}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSystem.EmailWorker", "..\ChatSystem.EmailWorker\ChatSystem.EmailWorker.csproj", "{60D66B1A-5374-49AB-B4F4-FFC4AE8CF9FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BF043ACB-15F2-47C1-922F-BF34216DA199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF043ACB-15F2-47C1-922F-BF34216DA199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF043ACB-15F2-47C1-922F-BF34216DA199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D66B1A-5374-49AB-B4F4-FFC4AE8CF9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D66B1A-5374-49AB-B4F4-FFC4AE8CF9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D66B1A-5374-49AB-B4F4-FFC4AE8CF9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D66B1A-5374-49AB-B4F4-FFC4AE8CF9FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

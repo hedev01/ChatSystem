@@ -28,7 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
             "Server=.;Database=Chat;User Id=UserForChatDB;Password=123456;TrustServerCertificate=True;");
 });
 
-Dependencies.Inject(builder.Services);
+Dependencies.Inject(builder.Services , builder.Configuration);
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
