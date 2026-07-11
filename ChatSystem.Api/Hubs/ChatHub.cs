@@ -23,15 +23,17 @@ namespace ChatSystem.Api.Hubs
 
         public async Task SendMessage(SendMessageRequest request)
         {
+            var timestamp = DateTime.UtcNow;
             await _chatService.SendMessage(new MessageDto
             {
                 SenderId = request.SenderId,
                 ReceiverId = request.ReceiverId,
-                Content = request.Content
+                Content = request.Content,
+                SentAt = timestamp
             });
 
             await Clients.Users(request.ReceiverId.ToString())
-                .SendAsync("ReceiveMessage", request.SenderId, request.ReceiverId, request.Content);
+                .SendAsync("ReceiveMessage", request.SenderId, request.ReceiverId, request.Content , timestamp);
         }
 
         public async Task MarkConversationAsRead(Guid senderId)
@@ -44,7 +46,7 @@ namespace ChatSystem.Api.Hubs
             await _chatService.MarkConversationAsRead(senderId, receiverId);
 
             await Clients.User(senderId.ToString())
-                .SendAsync("ConversationRead", receiverId);
+                .SendAsync("ConversationRead", receiverId , senderId);
         }
 
 
@@ -130,5 +132,27 @@ namespace ChatSystem.Api.Hubs
 
             _logger.LogInformation("✅ DISCONNECT COMPLETE | UserId: {UserId}", userId);
         }
+        public async Task StartTyping(Guid receiverId)
+        {
+            var senderId = Context.Items["userId"]?.ToString();
+
+            if (string.IsNullOrEmpty(senderId))
+                return;
+
+            await Clients.User(receiverId.ToString())
+                .SendAsync("UserStartedTyping", senderId);
+        }
+
+        public async Task StopTyping(Guid receiverId)
+        {
+            var senderId = Context.Items["userId"]?.ToString();
+
+            if (string.IsNullOrEmpty(senderId))
+                return;
+
+            await Clients.User(receiverId.ToString())
+                .SendAsync("UserStoppedTyping", senderId);
+        }
     }
+
 }
