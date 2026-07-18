@@ -27,7 +27,8 @@ namespace ChatSystem.Application.Features.Users.GetUsers
                 user.UserId,
                 user.FirstName,
                 user.LastName,
-                user.Email
+                user.Email,
+                user.AvatarUrl
             )).ToList();
 
             return Result<List<GetUsersResponse>>.Success(response);

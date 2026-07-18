@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using ChatSystem.Api.Hubs;
 using ChatSystem.Api.SignalR;
 using ChatSystem.Application.Interfaces;
@@ -21,6 +22,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters
+            .Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option
@@ -99,6 +106,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 //app.UseExceptionHandler();
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();

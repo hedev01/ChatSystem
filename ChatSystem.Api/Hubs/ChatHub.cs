@@ -21,19 +21,32 @@ namespace ChatSystem.Api.Hubs
         }
 
 
-        public async Task SendMessage(SendMessageRequest request)
+        public async Task SendMessage(MessageDto request)
         {
-            var timestamp = DateTime.UtcNow;
-            await _chatService.SendMessage(new MessageDto
+            try
             {
-                SenderId = request.SenderId,
-                ReceiverId = request.ReceiverId,
-                Content = request.Content,
-                SentAt = timestamp
-            });
+                _logger.LogInformation(
+                    "SendMessage: Sender={SenderId}, Receiver={ReceiverId}, Type={Type}",
+                    request.SenderId,
+                    request.ReceiverId,
+                    request.Type.ToString());
 
-            await Clients.Users(request.ReceiverId.ToString())
-                .SendAsync("ReceiveMessage", request.SenderId, request.ReceiverId, request.Content , timestamp);
+                request.SentAt = DateTime.UtcNow;
+
+                await _chatService.SendMessage(request);
+
+                _logger.LogInformation("Message saved successfully.");
+
+                await Clients.User(request.ReceiverId.ToString())
+                    .SendAsync("ReceiveMessage", request);
+
+                _logger.LogInformation("ReceiveMessage sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while executing SendMessage");
+                throw;
+            }
         }
 
         public async Task MarkConversationAsRead(Guid senderId)

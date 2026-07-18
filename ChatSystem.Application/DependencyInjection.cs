@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChatSystem.Application.Features.Upload;
 using ChatSystem.Application.Features.Users.GetUsers;
 using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
+using ChatSystem.Application.Features.Users.UploadAvatar;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatSystem.Application
@@ -16,7 +18,9 @@ namespace ChatSystem.Application
         {
             service.AddScoped<IRegisterUseCase, RegisterUseCase>()
                 .AddScoped<ILoginUseCase, LoginUseCase>()
-                .AddScoped<IGetUsersUseCase, GetUsersUseCase>();
+                .AddScoped<IGetUsersUseCase, GetUsersUseCase>()
+                .AddScoped<IUploadAvatarUseCase, UploadAvatarUseCase>()
+                .AddScoped<IUploadUsecase, UploadUsecase>();
             return service;
         }
     }

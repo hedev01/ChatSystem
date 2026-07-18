@@ -2,6 +2,7 @@
 using ChatSystem.Application.Features.Users.GetUsers;
 using ChatSystem.Application.Features.Users.Login;
 using ChatSystem.Application.Features.Users.Register;
+using ChatSystem.Application.Features.Users.UploadAvatar;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +15,14 @@ namespace ChatSystem.Api.Controllers
         private readonly IRegisterUseCase _registerUseCase;
         private readonly ILoginUseCase _loginUseCase;
         private readonly IGetUsersUseCase _getUsersUseCase;
+        private readonly IUploadAvatarUseCase _uploadAvatarUseCase;
 
-        public UserController(IRegisterUseCase registerUseCase, ILoginUseCase loginUseCase, IGetUsersUseCase getUsersUseCase)
+        public UserController(IRegisterUseCase registerUseCase, ILoginUseCase loginUseCase, IGetUsersUseCase getUsersUseCase , IUploadAvatarUseCase uploadAvatarUseCase)
         {
             _registerUseCase = registerUseCase;
             _loginUseCase = loginUseCase;
             _getUsersUseCase = getUsersUseCase;
+            _uploadAvatarUseCase = uploadAvatarUseCase;
         }
 
         [HttpPost("Register")]
@@ -67,6 +70,45 @@ namespace ChatSystem.Api.Controllers
                 return BadRequest(result.ErrorMessage);
             }
             return Ok(result);
+        }
+
+        [HttpPost("avatar")]
+        public async Task<IActionResult> UploadAvatar(
+            [FromForm] IFormFile file,
+            [FromForm] Guid userId,
+            CancellationToken cancellationToken)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new
+                {
+                    message = "File is required"
+                });
+            }
+
+            await using var stream = file.OpenReadStream();
+
+
+            var result = await _uploadAvatarUseCase.ExecuteAsync(
+                userId,
+                stream,
+                file.FileName,
+                cancellationToken);
+
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new
+                {
+                    message = result.ErrorMessage
+                });
+            }
+
+
+            return Ok(new
+            {
+                avatarUrl = result.Data
+            });
         }
 
     }

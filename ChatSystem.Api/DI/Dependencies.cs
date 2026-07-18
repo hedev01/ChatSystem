@@ -13,6 +13,7 @@ using ChatSystem.Infrastructure.Options;
 using ChatSystem.Infrastructure.Repositories;
 using ChatSystem.Infrastructure.Security;
 using ChatSystem.Infrastructure.Services;
+using ChatSystem.Infrastructure.Storage;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.SignalR;
@@ -38,7 +39,8 @@ namespace ChatSystem.Api.DI
                 .AddApplication()
                 .AddScoped<IValidator<RegisterRequest>, RegisterValidator>()
                 .AddScoped<IValidator<LoginRequest>, LoginValidator>()
-                .AddScoped<IMessagePublisher, RabbitMqPublisher>();
+                .AddScoped<IMessagePublisher, RabbitMqPublisher>()
+                .AddScoped<IFileStorage, LocalFileStorage>();
 
         }
     }

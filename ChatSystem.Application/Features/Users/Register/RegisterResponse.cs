@@ -11,5 +11,6 @@ namespace ChatSystem.Application.Features.Users.Register
         string firstName,
         string lastName,
         string email,
-        string accessToken);
+        string accessToken,
+        string avatarUrl = "");
 }

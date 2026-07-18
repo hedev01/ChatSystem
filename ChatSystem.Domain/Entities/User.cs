@@ -22,6 +22,7 @@ namespace ChatSystem.Domain.Entities
 
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
+        public string? AvatarUrl { get; private set; }
 
 
         public bool IsActive { get; private set; }
@@ -49,6 +50,10 @@ namespace ChatSystem.Domain.Entities
                 CreatedAt = DateTime.Now,
                 LastLoginAt = null
         };
+        }
+        public void UpdateAvatar(string avatarUrl)
+        {
+            AvatarUrl = avatarUrl;
         }
     }
 }

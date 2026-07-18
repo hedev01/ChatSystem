@@ -33,4 +33,8 @@
     <ProjectReference Include="..\ChatSystem.Infrastructure\ChatSystem.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\avatars\" />
+  </ItemGroup>
+
 </Project>

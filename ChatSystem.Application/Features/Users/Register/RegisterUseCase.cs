@@ -74,7 +74,8 @@ namespace ChatSystem.Application.Features.Users.Register
                     user.FirstName,
                     user.LastName,
                     user.Email,
-                    accessToken));
+                    accessToken,
+                    user.AvatarUrl));
         }
     }
 }

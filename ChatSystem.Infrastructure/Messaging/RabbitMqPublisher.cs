@@ -31,7 +31,7 @@ namespace ChatSystem.Infrastructure.Messaging
                 $"Publishing Event: {typeof(T).Name}"
             );
 
-
+            
             var channel = await _connection.CreateChannelAsync();
 
 

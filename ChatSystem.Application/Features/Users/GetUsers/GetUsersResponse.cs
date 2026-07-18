@@ -9,5 +9,6 @@ namespace ChatSystem.Application.Features.Users.GetUsers
     public record GetUsersResponse(Guid userId,
         string firstName,
         string lastName,
-        string email);
+        string email,
+        string avatarUrl);
 }

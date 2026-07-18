@@ -26,7 +26,7 @@ namespace ChatSystem.Infrastructure.Repositories
 
         public async Task<User?> Login(string email)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+            var result = await _context.Users.SingleOrDefaultAsync(user => user.Email == email);
             return result;
         }
 
@@ -40,6 +40,19 @@ namespace ChatSystem.Infrastructure.Repositories
         {
             var result = await _context.Users.Where(user => user.UserId != userId).ToListAsync();
             return result!;
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> GetUser(Guid userId)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserId == userId);
+            return user;
         }
     }
 }

@@ -12,6 +12,9 @@ namespace ChatSystem.Domain.Interfaces
         Task Register(User entity);
         Task<User?> Login(string email);
         Task<bool> EmailExists(string email);
-        Task<List<User?>> GetUsers(Guid userId);
+        Task<List<User?>> GetUsers(Guid userId); 
+        Task UpdateAsync(User user);
+        Task<User?> GetUser(Guid userId);
+
     }
 }
