@@ -28,6 +28,14 @@ builder.Services.AddSignalR()
         options.PayloadSerializerOptions.Converters
             .Add(new JsonStringEnumConverter());
     });
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option

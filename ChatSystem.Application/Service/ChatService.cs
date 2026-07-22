@@ -7,6 +7,7 @@ using ChatSystem.Application.DTO;
 using ChatSystem.Application.Interfaces;
 using ChatSystem.Domain.Entities;
 using ChatSystem.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace ChatSystem.Application.UseCase
 {
@@ -24,7 +25,11 @@ namespace ChatSystem.Application.UseCase
             {
                 SenderId = dto.SenderId,
                 ReceiverId = dto.ReceiverId,
-                Content = dto.Content
+                Content = dto.Content,
+                FileName = dto.FileName,
+                FileSize = (long)dto.FileSize,
+                FileUrl = dto.FileUrl,
+                Type = dto.Type.ToString(),
             };
 
             await _repo.AddAsync(message);
